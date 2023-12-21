@@ -18,3 +18,7 @@ bed_time = (datetime.strptime(wake_time,'%I:%M %p')-sleep_hours).strftime('%I:%M
 
 print(wake_time)
 print(bed_time)
+
+def wake_and_bed():
+    # above logic
+    return []
