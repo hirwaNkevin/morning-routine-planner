@@ -31,7 +31,9 @@ def wake_and_bed(start_day_time: int, sleep_hours_int: int, routine_duration_int
 
     """
     # Validate inputs
-
+    if not (0 <= sleep_hours_int <= 8) and not (4 <= start_day_time <= 6):
+        raise ValueError(
+            "Unacceptable input. Sleeping hours and bedtime hour should be in the bounds of acceptable regulations")
     # Convert inputs
     # start_day_time = datetime.strptime(start_day_time_string, '%I:%M:%S %p')
     # Using an arbitrary date for calculation
