@@ -16,13 +16,13 @@ from datetime import datetime, date, time, timedelta, timezone
 # print(bed_time)
 
 
-def wake_and_bed(start_day_time: int, sleep_hours_int: int, routine_duration_int: int) -> dict:
+def wake_and_bed(sleep_hours_int: int, start_day_time: str, routine_duration_int: int):
     """
     Calculate the wake hour and bed hour based on the desired 
     start time and duration of the morning routine; and the desired sleep hours.
 
     Parameters:
-    - start_day_time (int): the hour at which the morning routine will start in the format 'II:MM AM/PM'
+    - start_day_time (str): the hour at which the morning routine will start in the format 'II:MM AM/PM'
     - sleep_hours (int): the desired hours of sleep.
     - routine_duration (int): the duration of the morning routine
 
@@ -30,21 +30,33 @@ def wake_and_bed(start_day_time: int, sleep_hours_int: int, routine_duration_int
     - [wake_time (str),bed_time (str)] (dict)
 
     """
-    # Validate inputs
-    if not (0 <= sleep_hours_int <= 8) and not (4 <= start_day_time <= 6):
-        raise ValueError(
-            "Unacceptable input. Sleeping hours and bedtime hour should be in the bounds of acceptable regulations")
-    # Convert inputs
-    # start_day_time = datetime.strptime(start_day_time_string, '%I:%M:%S %p')
-    # Using an arbitrary date for calculation
-    start_day_time = bedtime = datetime(2023, 1, 1, start_day_time, 0)
-    sleep_hours = timedelta(hours=sleep_hours_int)
-    routine_duration = timedelta(hours=routine_duration_int)
+    try:
+        # Validate inputs
+        if not (6 <= sleep_hours_int <= 8):
+            raise Exception(
+                "Unacceptable input. Sleeping hours should be in the bounds of acceptable regulations")
+        elif not (datetime.strptime("7:00:00 am", '%I:%M:%S %p') <= datetime.strptime(start_day_time, '%I:%M:%S %p') <= datetime.strptime("8:00:00 am", '%I:%M:%S %p')):
+            raise Exception(
+                "Unacceptable input. Start day time should be in the bounds of acceptable regulations")
+        elif not (1 <= routine_duration_int <= 3):
+            raise Exception(
+                "Unacceptable input. Routine duration should be in the bounds of acceptable regulations")
 
-    # Calculate wake and bed time
-    wake_time = start_day_time-routine_duration
-    bed_time = wake_time - sleep_hours
+        # Convert inputs
+        start_day_time = datetime.strptime(start_day_time, '%I:%M:%S %p')
 
-    # Format outputs
+        # Using an arbitrary date for calculation
+        # start_day_time = datetime(2023, 1, 1, start_day_time, 0)
 
-    return {"wake time": wake_time.strftime('%I:%M:%S %p'), "bed time": bed_time.strftime('%I:%M:%S %p')}
+        sleep_hours = timedelta(hours=sleep_hours_int)
+        routine_duration = timedelta(hours=routine_duration_int)
+
+        # Calculate wake and bed time
+        wake_time = start_day_time - routine_duration
+        bed_time = wake_time - sleep_hours
+
+        # Format outputs
+
+        return {"wake time": wake_time.strftime('%I:%M:%S %p'), "bed time": bed_time.strftime('%I:%M:%S %p')}
+    except:
+        return ("Something went wrong with the inputs. Check well to see if they meet the regulations")
